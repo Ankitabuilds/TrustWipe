@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrustWipe Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="dashboard-header">
+    <h1>TrustWipe Dashboard</h1>
+
+    <a href="index.html" class="back-btn">
+        Back to Home
+    </a>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Device Information</h2>
+
+        <p><strong>Device:</strong> SSD Drive</p>
+        <p><strong>Capacity:</strong> 512 GB</p>
+        <p><strong>Status:</strong> Ready</p>
+        <p><strong>Method:</strong> NIST 800-88</p>
+    </div>
+        <br><br>
+    <div class="card">
+
+        <h2>Sanitization</h2>
+
+        <button onclick="startSanitization()">
+            Start Sanitization
+        </button>
+
+        <div class="progress-container">
+            <div id="progressBar"></div>
+        </div>
+
+        <p id="progressText">0%</p>
+
+        <p id="status">
+            Waiting to start...
+        </p>
+
+    </div>
+        <br><br>
+    <div class="card">
+
+        <h2>Verification</h2>
+
+        <button onclick="verifyData()">
+            Verify
+        </button>
+
+        <p id="verifyStatus">
+            Verification Pending
+        </p>
+
+    </div>
+         <br><br>
+    <div class="card">
+
+        <h2>Certificate</h2>
+
+        <button onclick="generateCertificate()">
+            Generate Certificate
+        </button>
+
+        <p id="certificateStatus">
+            No Certificate Generated
+        </p>
+
+    </div>
+
+</div>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>
