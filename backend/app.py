@@ -1,6 +1,8 @@
 from flask import Flask, jsonify
 import psutil
 from sanitization import sanitize_test_file
+from evidence import generate_evidence_hash
+from certificate import create_certificate
 
 app = Flask(__name__)
 
@@ -36,7 +38,23 @@ def device_info():
 @app.route("/sanitize", methods=["POST"])
 def sanitize():
     result = sanitize_test_file("test_data/sample.txt")
-    return jsonify(result)
+
+    evidence = {
+        "sanitization_result": result
+    }
+
+    evidence_hash = generate_evidence_hash(evidence)
+
+    certificate = create_certificate(
+        result,
+        evidence_hash
+    )
+
+    return jsonify({
+        "result": result,
+        "evidence_hash": evidence_hash,
+        "certificate": certificate
+    })
 
 
 if __name__ == "__main__":

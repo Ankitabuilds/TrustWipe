@@ -10,16 +10,13 @@ def sanitize_test_file(file_path):
             "message": "Test file not found"
         }
 
-    # Read the original data
-    original_data = path.read_text()
-
     # Replace the test data with a harmless marker
     path.write_text("DATA_SANITIZED")
 
-    # Verify the original content is no longer present
+    # Verify sanitization
     new_data = path.read_text()
 
-    if original_data != new_data:
+    if new_data == "DATA_SANITIZED":
         return {
             "status": "completed",
             "message": "Test data sanitized successfully"
