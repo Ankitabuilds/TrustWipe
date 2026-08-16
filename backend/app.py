@@ -1,10 +1,12 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 import psutil
 from sanitization import sanitize_test_file
 from evidence import generate_evidence_hash
 from certificate import create_certificate
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/")
