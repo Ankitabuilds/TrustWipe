@@ -3,7 +3,7 @@ from datetime import datetime
 
 def create_certificate(result, evidence_hash):
     certificate = {
-        "project": "TrustWipe",
+        "project": "ErasureX",
         "certificate_type": "Sanitization Certificate",
         "status": result["status"],
         "message": result["message"],

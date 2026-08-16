@@ -3,40 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TrustWipe Dashboard</title>
+    <title>ErasureX Dashboard</title>
 
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
 <header class="dashboard-header">
-    <h1>TrustWipe Dashboard</h1>
+
+    <h1>ErasureX Dashboard</h1>
 
     <a href="index.html" class="back-btn">
         Back to Home
     </a>
+
 </header>
+
 
 <div class="container">
 
+
+    <!-- DEVICE INFORMATION -->
+
     <div class="card">
+
         <h2>Device Information</h2>
 
         <div id="deviceInfo">
-    Loading device information...
-</div>
+            Loading device information...
+        </div>
+
     </div>
-        <br><br>
+
+
+    <br><br>
+
+
+    <!-- SANITIZATION -->
+
     <div class="card">
 
         <h2>Sanitization</h2>
+
+        <label>
+            <strong>Test Data File:</strong>
+        </label>
+
+        <br><br>
+
+        <input
+            type="text"
+            id="testFile"
+            value="sample.txt"
+            placeholder="Enter file name"
+        >
+
+        <br><br>
 
         <button onclick="startSanitization()">
             Start Sanitization
         </button>
 
         <div class="progress-container">
+
             <div id="progressBar"></div>
+
         </div>
 
         <p id="progressText">0%</p>
@@ -46,7 +78,13 @@
         </p>
 
     </div>
-        <br><br>
+
+
+    <br><br>
+
+
+    <!-- VERIFICATION -->
+
     <div class="card">
 
         <h2>Verification</h2>
@@ -60,7 +98,13 @@
         </p>
 
     </div>
-         <br><br>
+
+
+    <br><br>
+
+
+    <!-- CERTIFICATE -->
+
     <div class="card">
 
         <h2>Certificate</h2>
@@ -75,7 +119,9 @@
 
     </div>
 
+
 </div>
+
 
 <script src="js/script.js"></script>
 

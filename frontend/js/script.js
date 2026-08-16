@@ -50,45 +50,74 @@ async function loadDeviceInfo() {
 // -----------------------------
 async function startSanitization() {
 
-    document.getElementById("status").innerHTML =
-        "Sanitization in Progress...";
+    const filename = document
+        .getElementById("testFile")
+        .value
+        .trim();
 
-    document.getElementById("progressBar").style.width = "30%";
-    document.getElementById("progressText").innerHTML = "Processing...";
+    if (!filename) {
 
-    // Reset verification and certificate states
+        document.getElementById("status").innerHTML =
+            "❌ Please enter a test filename.";
+
+        return;
+    }
+
+    // Reset previous states
+    sanitizationResult = null;
+
     document.getElementById("verifyStatus").innerHTML =
         "Verification Pending";
 
     document.getElementById("certificateStatus").innerHTML =
         "No Certificate Generated";
 
-    sanitizationResult = null;
+    document.getElementById("status").innerHTML =
+        "Sanitization in Progress...";
+
+    document.getElementById("progressBar").style.width =
+        "30%";
+
+    document.getElementById("progressText").innerHTML =
+        "Processing...";
 
     try {
 
         const response = await fetch(`${API_URL}/sanitize`, {
-            method: "POST"
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                filename: filename
+            })
         });
 
         const result = await response.json();
 
-        sanitizationResult = result;
-
-        if (!response.ok || result.result.status === "failed") {
+        if (!response.ok || result.status === "failed") {
 
             document.getElementById("status").innerHTML =
                 "❌ Sanitization Failed";
 
             document.getElementById("progressText").innerHTML =
-                "Failed";
+                result.message || "File not found";
+
+            document.getElementById("progressBar").style.width =
+                "0%";
 
             sanitizationResult = null;
 
             return;
         }
 
-        document.getElementById("progressBar").style.width = "100%";
+        sanitizationResult = result;
+
+        document.getElementById("progressBar").style.width =
+            "100%";
 
         document.getElementById("progressText").innerHTML =
             "100%";
@@ -117,7 +146,7 @@ function verifyData() {
     if (!sanitizationResult) {
 
         document.getElementById("verifyStatus").innerHTML =
-            "⚠️ Please run sanitization first.";
+            "⚠️ Please run successful sanitization first.";
 
         return;
     }
@@ -141,33 +170,60 @@ function verifyData() {
 // -----------------------------
 // Certificate
 // -----------------------------
-function generateCertificate() {
+async function generateCertificate() {
 
     if (!sanitizationResult) {
 
         document.getElementById("certificateStatus").innerHTML =
-            "⚠️ Please run sanitization first.";
+            "⚠️ Please complete successful sanitization first.";
 
         return;
     }
 
-    if (
-        sanitizationResult.certificate &&
-        sanitizationResult.certificate.status === "completed"
-    ) {
+    document.getElementById("certificateStatus").innerHTML =
+        "⏳ Generating Certificate...";
+
+    try {
+
+        const response = await fetch(`${API_URL}/certificate`, {
+            method: "POST"
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || result.status === "failed") {
+
+            document.getElementById("certificateStatus").innerHTML =
+                "❌ " + result.message;
+
+            return;
+        }
+
+        const certificate = result.certificate;
 
         document.getElementById("certificateStatus").innerHTML =
-            "✅ Certificate Generated<br>" +
-            "Project: " +
-            sanitizationResult.certificate.project +
+            "✅ Certificate Generated Successfully<br><br>" +
+            "<strong>Project:</strong> " +
+            certificate.project +
             "<br>" +
-            "Evidence Hash: " +
-            sanitizationResult.evidence_hash;
+            "<strong>Type:</strong> " +
+            certificate.certificate_type +
+            "<br>" +
+            "<strong>Status:</strong> " +
+            certificate.status +
+            "<br>" +
+            "<strong>Evidence Hash:</strong> " +
+            certificate.evidence_hash +
+            "<br>" +
+            "<strong>Timestamp:</strong> " +
+            certificate.timestamp;
 
-    } else {
+    } catch (error) {
+
+        console.error(error);
 
         document.getElementById("certificateStatus").innerHTML =
-            "❌ Certificate generation failed.";
+            "❌ Cannot connect to TrustWipe backend.";
     }
 }
 
@@ -175,4 +231,7 @@ function generateCertificate() {
 // -----------------------------
 // Load device information
 // -----------------------------
-window.addEventListener("DOMContentLoaded", loadDeviceInfo);
+window.addEventListener(
+    "DOMContentLoaded",
+    loadDeviceInfo
+);
